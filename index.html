@@ -13,6 +13,11 @@
         <input type="file" id="pc-file" />
       </div>
       <div>
+        <label>Byte range to analyse</label>
+        <input type="text" id="range-start" value="0">
+        <input type="text" id="range-end" value="9999">
+      </div>
+      <div>
         <label for="select-file">Select file from network</label>
         <select id="select-file" value="/file_example_MOV_1920_2_2MB.mov"/>
           <option disabled>--- Video files ---</option>
@@ -28,13 +33,13 @@
           <option value="/file_example_TIFF_5MB.tiff">Sample TIFF</option>
         </select>
         <button type="submit" id="analyse-whole">Analyse whole file</button>
-        <button type="submit" id="analyse-first">Analyse first 10kB</button>
+        <button type="submit" id="analyse-first">Analyse byte range</button>
       </div>
       <div>
         <label for="fileurl">Custom URL</label>
         <input type="text" id="url-file" />
         <button type="submit" id="url-analyse-whole">Analyse whole file</button>
-        <button type="submit" id="url-analyse-first">Analyse first 10kB</button>
+        <button type="submit" id="url-analyse-first">Analyse byte range</button>
       </div>
       <pre id="output"></pre>
     </div>

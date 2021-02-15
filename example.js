@@ -10,6 +10,9 @@ const urlFile = document.getElementById('url-file')
 const urlButtonWhole = document.getElementById('url-analyse-whole')
 const urlButtonFirst = document.getElementById('url-analyse-first')
 
+const byteRangeStart = document.getElementById('range-start')
+const byteRangeEnd = document.getElementById('range-end')
+
 const fetchHeaders = async (url) => {
   const {headers} = await fetch(url, {method: 'HEAD'})
   const contentLength = headers.get('content-length')
@@ -26,10 +29,10 @@ const fetchBytes = async (url, headers = {}) => {
 
 const delay = (time) => new Promise((res) => setTimeout(res, time))
 
-const onChangeSelect = async (mediainfo, firstBytesCount) => performExternal(mediainfo, selectFile.value, firstBytesCount)
-const onChangeUrl = async (mediainfo, firstBytesCount) => performExternal(mediainfo, urlFile.value, firstBytesCount)
+const onChangeSelect = async (mediainfo, useRange) => performExternal(mediainfo, selectFile.value, useRange)
+const onChangeUrl = async (mediainfo, useRange) => performExternal(mediainfo, urlFile.value, useRange)
 
-const performExternal = async (mediainfo, URL, firstBytesCount = 0) => {
+const performExternal = async (mediainfo, URL, useRange = false) => {
   try {
     const STR = {
       url: URL,
@@ -42,7 +45,7 @@ const performExternal = async (mediainfo, URL, firstBytesCount = 0) => {
     const contentLength = parseInt(headers_in.get('content-length'))
     const contentType = headers_in.get('content-type')
     const acceptRanges = headers_in.get('accept-ranges')
-    const analyseFirstBytes = acceptRanges === 'bytes' && firstBytesCount > 0
+    const analyseFirstBytes = acceptRanges === 'bytes' && useRange
 
     STR.headers = {contentLength, contentType, acceptRanges}
     output.innerHTML = JSON.stringify(STR, null, 2)
@@ -50,11 +53,11 @@ const performExternal = async (mediainfo, URL, firstBytesCount = 0) => {
     let needThoroughAnalysis = false
     // Fetch first/all bytes
     if (analyseFirstBytes) {
-      STR.status = `Fetching first ${firstBytesCount} bytes`
-      output.innerHTML = JSON.stringify(STR, null, 2)
       const headers_out = {
-        range: `bytes=0-${firstBytesCount - 1}`
+        range: `bytes=${byteRangeStart.value}-${byteRangeEnd.value}`
       }
+      STR.status = `Fetching range ${headers_out.range}`
+      output.innerHTML = JSON.stringify(STR, null, 2)
       const buffer1 = await fetchBytes(URL, headers_out)
       // Methods for mediainfo
       const readChunk = (chunkSize, offset) => buffer1.slice(offset, offset + chunkSize)
@@ -123,7 +126,7 @@ const onChangeFile = (mediainfo) => {
 MediaInfo({ format: 'JSON' }, (mediainfo) => {
   computerFile.addEventListener('change', () => onChangeFile(mediainfo))
 	buttonWhole.addEventListener('click', () => onChangeSelect(mediainfo))
-	buttonFirst.addEventListener('click', () => onChangeSelect(mediainfo, 10000))
+	buttonFirst.addEventListener('click', () => onChangeSelect(mediainfo, true))
   urlButtonWhole.addEventListener('click', () => onChangeUrl(mediainfo))
-	urlButtonFirst.addEventListener('click', () => onChangeUrl(mediainfo, 10000))
+	urlButtonFirst.addEventListener('click', () => onChangeUrl(mediainfo, true))
 })
