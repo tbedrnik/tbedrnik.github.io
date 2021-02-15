@@ -7,7 +7,7 @@ const onChangeUrl = (mediainfo) => {
 	output.value = `Fetching first 10kB of ${fileurl.value}`
 	fetch(fileurl.value, {
 		headers: {
-			// 'Range': 'bytes=0-10000'
+			'Range': 'bytes=0-10000'
 		}
 	})
 	.then(res => res.arrayBuffer())
