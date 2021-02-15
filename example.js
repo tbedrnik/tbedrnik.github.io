@@ -1,29 +1,28 @@
 const fileinput = document.getElementById('fileinput')
 const fileurl = document.getElementById('fileurl')
 const output = document.getElementById('output')
-const button = document.getElementById('submit')
+const buttonWhole = document.getElementById('analyse-whole')
+const buttonFirst = document.getElementById('analyse-first')
 
-const onChangeUrl = (mediainfo) => {
-	output.value = `Fetching first 10kB of ${fileurl.value}`
-	fetch(fileurl.value, {
-		headers: {
-			'Range': 'bytes=0-10000'
-		}
-	})
-	.then(res => res.arrayBuffer())
+const onChangeUrl = (mediainfo, headers = {}) => {
+	output.value = `Fetching ${fileurl.value}`
+	fetch(fileurl.value, {headers})
+	.then(res => {
+    console.log({type: res.type, size: res.headers})
+    return res.arrayBuffer()
+  })
 	.then(_buffer => {
 		const buffer = new Uint8Array(_buffer)
 		const readChunk = (chunkSize, offset) => buffer.slice(offset, offset + chunkSize)
 		const getSize = () => buffer.byteLength
-		mediainfo
-			.analyzeData(getSize, readChunk)
-			.then((result) => {
-				output.value = result
-			})
-			.catch((error) => {
-				output.value = `An error occured:\n${error.stack}`
-			})
+		return mediainfo.analyzeData(getSize, readChunk)
 	})
+  .then((result) => {
+    output.value = result
+  })
+  .catch((error) => {
+    output.value = `An error occured:\n${error.stack}`
+  })
 }
 
 const onChangeFile = (mediainfo) => {
@@ -59,5 +58,6 @@ const onChangeFile = (mediainfo) => {
 
 MediaInfo({ format: 'JSON' }, (mediainfo) => {
   fileinput.addEventListener('change', () => onChangeFile(mediainfo))
-	button.addEventListener('click', () => onChangeUrl(mediainfo))
+	buttonWhole.addEventListener('click', () => onChangeUrl(mediainfo))
+	buttonFirst.addEventListener('click', () => onChangeUrl(mediainfo, {Range: 'bytes=0-10000'}))
 })
