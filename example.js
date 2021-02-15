@@ -70,7 +70,7 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
       // TODO: if analysis1 doesn't contain all neccessary info and we analysed
       // only first bytes we can perform additional analysis on whole content
       await delay(1000) // To see the result before prompting
-      needThoroughAnalysis = !!prompt('Perform full analysis? (Cancel for no)', 'Yes please')
+      needThoroughAnalysis = confirm('Perform full analysis?')
     }
 
     if (!analyseFirstBytes || needThoroughAnalysis) {
