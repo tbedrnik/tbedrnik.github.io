@@ -104,7 +104,7 @@ const onChangeFile = (mediainfo) => {
     mediainfo
       .analyzeData(getSize, readChunk)
       .then((result) => {
-        output.value = result
+        output.value = JSON.stringify(JSON.parse(result), null, 2)
       })
       .catch((error) => {
         output.value = `An error occured:\n${error.stack}`
