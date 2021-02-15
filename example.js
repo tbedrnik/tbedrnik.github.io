@@ -13,6 +13,9 @@ const urlButtonFirst = document.getElementById('url-analyse-first')
 const byteRangeStart = document.getElementById('range-start')
 const byteRangeEnd = document.getElementById('range-end')
 
+const viewer = new JSONViewer()
+document.getElementById('json').appendChild(viewer.getContainer())
+
 const fetchHeaders = async (url) => {
   const {headers} = await fetch(url, {method: 'HEAD'})
   const contentLength = headers.get('content-length')
@@ -38,7 +41,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
       url: URL,
       status: `Fetching headers`
     }
-    output.innerHTML = JSON.stringify(STR, null, 2)
+    viewer.showJSON(STR)
+    // output.innerHTML = JSON.stringify(STR, null, 2)
   
     // Fetch headers first
     const {headers: headers_in} = await fetch(URL, {method: 'HEAD'})
@@ -48,7 +52,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
     const analyseFirstBytes = acceptRanges === 'bytes' && useRange
 
     STR.headers = {contentLength, contentType, acceptRanges}
-    output.innerHTML = JSON.stringify(STR, null, 2)
+    viewer.showJSON(STR)
+    // output.innerHTML = JSON.stringify(STR, null, 2)
     
     let needThoroughAnalysis = false
     // Fetch first/all bytes
@@ -57,7 +62,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
         range: `bytes=${byteRangeStart.value}-${byteRangeEnd.value}`
       }
       STR.status = `Fetching range ${headers_out.range}`
-      output.innerHTML = JSON.stringify(STR, null, 2)
+      viewer.showJSON(STR)
+      // output.innerHTML = JSON.stringify(STR, null, 2)
       const buffer1 = await fetchBytes(URL, headers_out)
       // Methods for mediainfo
       const readChunk = (chunkSize, offset) => buffer1.slice(offset, offset + chunkSize)
@@ -65,7 +71,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
       // Perform analysis
       const analysis1 = await mediainfo.analyzeData(getSize, readChunk)
       STR.analysis_short = JSON.parse(analysis1)
-      output.innerHTML = JSON.stringify(STR, null, 2)
+      viewer.showJSON(STR)
+      // output.innerHTML = JSON.stringify(STR, null, 2)
  
       // TODO: if analysis1 doesn't contain all neccessary info and we analysed
       // only first bytes we can perform additional analysis on whole content
@@ -75,7 +82,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
 
     if (!analyseFirstBytes || needThoroughAnalysis) {
       STR.status = `Fetching all bytes`
-      output.innerHTML = JSON.stringify(STR, null, 2)
+      viewer.showJSON(STR)
+      // output.innerHTML = JSON.stringify(STR, null, 2)
   
       const buffer2 = await fetchBytes(URL)
       // Methods for mediainfo
@@ -84,7 +92,8 @@ const performExternal = async (mediainfo, URL, useRange = false) => {
       // Perform analysis
       const analysis2 = await mediainfo.analyzeData(getSize, readChunk)
       STR.analysis_full = JSON.parse(analysis2)
-      output.innerHTML = JSON.stringify(STR, null, 2)
+      viewer.showJSON(STR)
+      // output.innerHTML = JSON.stringify(STR, null, 2)
     }
 
   } catch (error) {

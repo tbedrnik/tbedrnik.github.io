@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>mediainfo.js simple demo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./skeleton-forms.css" />
+    <link rel="stylesheet" href="./json-viewer.css" />
   </head>
   <body>
     <div id="wrapper">
@@ -42,8 +43,10 @@
         <button type="submit" id="url-analyse-first">Analyse byte range</button>
       </div>
       <pre id="output"></pre>
+      <div id="json"></div>
     </div>
     <script type="text/javascript" src="https://unpkg.com/mediainfo.js/dist/mediainfo.min.js"></script>
+    <script type="text/javascript" src="./json-viewer.js"></script>
     <script type="text/javascript" src="./example.js"></script>
   </body>
 </html>
