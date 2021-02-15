@@ -4,40 +4,17 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>mediainfo.js simple demo</title>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      body * {
-        box-sizing: border-box;
-      }
-      #wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        padding: 8px;
-        position: absolute;
-        width: 100%;
-      }
-      #fileinput {
-        padding-bottom: 8px;
-      }
-      #output {
-        height: 100%;
-      }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" />
   </head>
   <body>
     <div id="wrapper">
       <div>
-        <label for="fileinput">Select file from computer</label>
-        <input type="file" id="fileinput" name="fileinput" />
+        <label for="pc-file">Select file from computer</label>
+        <input type="file" id="pc-file" />
       </div>
       <div>
-        <label for="fileurl">Select file from network</label>
-        <select id="fileurl" name="fileurl" value="/file_example_MOV_1920_2_2MB.mov"/>
+        <label for="select-file">Select file from network</label>
+        <select id="select-file" value="/file_example_MOV_1920_2_2MB.mov"/>
           <option disabled>--- Video files ---</option>
           <option value="/file_example_MOV_1920_2_2MB.mov">Sample MOV</option>
           <option value="/file_example_AVI_1280_1_5MG.avi">Sample AVI</option>
@@ -50,8 +27,14 @@
           <option value="/giphy3.gif">Sample Animated GIF</option>
           <option value="/file_example_TIFF_5MB.tiff">Sample TIFF</option>
         </select>
-        <button type="submit" id="analyse-whole" name="analyse-whole">Analyse whole file</button>
-        <button type="submit" id="analyse-first" name="analyse-first">Analyse first 10kB</button>
+        <button type="submit" id="analyse-whole">Analyse whole file</button>
+        <button type="submit" id="analyse-first">Analyse first 10kB</button>
+      </div>
+      <div>
+        <label for="fileurl">Custom URL</label>
+        <input type="text" id="url-file" />
+        <button type="submit" id="url-analyse-whole">Analyse whole file</button>
+        <button type="submit" id="url-analyse-first">Analyse first 10kB</button>
       </div>
       <pre id="output"></pre>
     </div>

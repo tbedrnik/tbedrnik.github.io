@@ -1,8 +1,14 @@
-const fileinput = document.getElementById('fileinput')
-const fileurl = document.getElementById('fileurl')
 const output = document.getElementById('output')
+
+const computerFile = document.getElementById('pc-file')
+
+const selectFile = document.getElementById('select-file')
 const buttonWhole = document.getElementById('analyse-whole')
 const buttonFirst = document.getElementById('analyse-first')
+
+const urlFile = document.getElementById('url-file')
+const urlButtonWhole = document.getElementById('url-analyse-whole')
+const urlButtonFirst = document.getElementById('url-analyse-first')
 
 const fetchHeaders = async (url) => {
   const {headers} = await fetch(url, {method: 'HEAD'})
@@ -20,9 +26,11 @@ const fetchBytes = async (url, headers = {}) => {
 
 const delay = (time) => new Promise((res) => setTimeout(res, time))
 
-const onChangeUrl = async (mediainfo, firstBytesCount = 0) => {
+const onChangeSelect = async (mediainfo, firstBytesCount) => performExternal(mediainfo, selectFile.value, firstBytesCount)
+const onChangeUrl = async (mediainfo, firstBytesCount) => performExternal(mediainfo, urlFile.value, firstBytesCount)
+
+const performExternal = async (mediainfo, URL, firstBytesCount = 0) => {
   try {
-    const URL = fileurl.value
     const STR = {
       url: URL,
       status: `Fetching headers`
@@ -82,7 +90,7 @@ const onChangeUrl = async (mediainfo, firstBytesCount = 0) => {
 }
 
 const onChangeFile = (mediainfo) => {
-  const file = fileinput.files[0]
+  const file = computerFile.files[0]
 
   if (file) {
     output.value = 'Working…'
@@ -113,7 +121,9 @@ const onChangeFile = (mediainfo) => {
 }
 
 MediaInfo({ format: 'JSON' }, (mediainfo) => {
-  fileinput.addEventListener('change', () => onChangeFile(mediainfo))
-	buttonWhole.addEventListener('click', () => onChangeUrl(mediainfo))
-	buttonFirst.addEventListener('click', () => onChangeUrl(mediainfo, 10000))
+  computerFile.addEventListener('change', () => onChangeFile(mediainfo))
+	buttonWhole.addEventListener('click', () => onChangeSelect(mediainfo))
+	buttonFirst.addEventListener('click', () => onChangeSelect(mediainfo, 10000))
+  urlButtonWhole.addEventListener('click', () => onChangeUrl(mediainfo))
+	urlButtonFirst.addEventListener('click', () => onChangeUrl(mediainfo, 10000))
 })
